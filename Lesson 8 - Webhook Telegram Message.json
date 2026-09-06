@@ -1,0 +1,75 @@
+{
+  "name": "Lesson 8 - Webhook Telegram Message",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-test",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c19ca3a8-f321-4cef-bb7b-b226cfd01993",
+      "name": "Webhook",
+      "webhookId": "5e5ffbd8-49cd-4237-919a-03398a113287"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id"
+            },
+            {
+              "name": "text",
+              "value": "Hello from n8n via HTTP Request"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        192,
+        0
+      ],
+      "id": "c33f8b54-1789-47c9-b7b4-2c6a4d0240a4",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ec74bb86-08c2-4205-94cd-8deba71084c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "FnzKPkfxmTYISNgB",
+  "tags": []
+}
