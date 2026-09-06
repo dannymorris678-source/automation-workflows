@@ -1,0 +1,110 @@
+{
+  "name": "Lesson 10 - Expressions & Data Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9447e20a-c9ac-4fca-9d7b-ec6e063d32f6",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "77166327-effa-4abd-8a0a-d75069bd282b",
+      "name": "Webhook",
+      "webhookId": "9447e20a-c9ac-4fca-9d7b-ec6e063d32f6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0af11d60-76c7-4e8a-8f6c-aaca1b1afb87",
+              "name": "greeting",
+              "value": "=Hello, {{ $json.body.name }}! You said: {{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b4651239-c258-4c30-b51d-1d52962d5379",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8851567709:AAGIMMLXfzG6sygOwcGfuX7qI-Z4HbB_a6g/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "1417671961"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.greeting }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5bf8b678-ac42-47a9-867c-a6cf56a5e2c6",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "31e23dee-8f61-475d-803b-4bed9bbd9892",
+  "meta": {
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "9tWKADyIrlAKTGEy",
+  "tags": []
+}
