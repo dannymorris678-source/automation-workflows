@@ -1,0 +1,176 @@
+{
+  "name": "Session 7 - Hello Danny",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ef8a5381-ceb1-4066-856e-1b2068d2b519",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "69ab4c0f-e8c0-48e7-a80b-2a85156ca156",
+              "name": "message",
+              "value": "Hello Danny",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "de50607a-065c-412f-a25f-cd2daeb82893",
+      "name": "Name"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc41d38d-004a-4f7b-92f6-745523ad7fbc",
+              "name": "location",
+              "value": "Málaga",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2a940e68-d6de-48f8-aa94-efff7affa968",
+      "name": "Location"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "77ade374-aa07-4118-91f6-f77e2a8649b6",
+              "name": "year",
+              "value": 2026,
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        656,
+        0
+      ],
+      "id": "fdd01d72-150e-4c17-afb6-efde44871bb4",
+      "name": "Year"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19861b27-e2bc-4725-ad06-48cd34f2dfe9",
+              "name": "learning",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        880,
+        0
+      ],
+      "id": "e8ef5c73-beb4-44d2-82e3-e013d92cdfcf",
+      "name": "Learning"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name": {
+      "main": [
+        [
+          {
+            "node": "Location",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Location": {
+      "main": [
+        [
+          {
+            "node": "Year",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Year": {
+      "main": [
+        [
+          {
+            "node": "Learning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Learning": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8a15cc3b-2bd4-4517-8e7a-b53b0b6d586e",
+  "meta": {
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "Esa4Pdogn7DusM1i",
+  "tags": []
+}
