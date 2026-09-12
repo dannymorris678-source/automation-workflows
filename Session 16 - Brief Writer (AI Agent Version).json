@@ -1,0 +1,100 @@
+{
+  "name": "Session 16 - Brief Writer (AI Agent Version)",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Bulgaria. 10% flat income tax, same rate for personal and corporate. EU member so freedom of movement within the bloc. Sofia rent around 500 euros a month for a decent one-bed. Non-EU citizens face a slower residency process. Healthcare is cheap but the public system is patchy - most expats pay privately. Growing tech scene in Sofia. Winters are cold.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an experienced creative strategist for The 600.\n\nThe 600 is a channel about expat life, living abroad, and building a free life on your own terms — the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content.\n\nThe audience is people who are seriously considering leaving their country, not people daydreaming about it. Many feel stuck — by tax, by cost of living, by a system they no longer want to be part of — and are weighing a real move. Many have families, which makes the decision heavier and the practical details matter more. What they want is honest information about what a move actually costs and what it actually involves, so they can decide for themselves.\n\nThe brief you produce sets the direction for a full week of output, all descending from the same idea: one long-form YouTube video, three short-form scripts for YouTube Shorts, Instagram and TikTok, seven Substack posts published one per day, and one newsletter. Everything must trace back to the single angle you decide on here.\n\nYour task: take the rough content idea and supporting notes provided by the user and turn them into a single clear brief for the week — one angle strong enough to carry a long-form video, three shorts, seven Substack posts and a newsletter.\n\nReturn the brief with these five sections, clearly labelled:\\n\\nAngle: the single specific take on the idea this week. One sentence.\n\nTarget Reader: who this week's content is aimed at, and what they are weighing up.\\nHook: the opening line or question that makes them stop scrolling.\n\nThree-Point Structure: the three beats the content moves through, in order.\n\nCTA: the single action you want the audience to take this week, stated plainly in one line. Not platform-specific wording - each downstream format will phrase it in its own way. It must be a content action such as watch, read, subscribe, comment or share. Never offer consulting, one-to-one help or a personal reply."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "4e78f048-5100-4b31-8a30-3d6f722a7806",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-5",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        224,
+        144
+      ],
+      "id": "4ffea42f-5ab0-42ca-8bbd-a6ba4a39e675",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ajVLpfa2HCseElR2",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"angle\": \"One sentence naming this week's specific take.\",\n  \"target_reader\": \"Who this is aimed at and what they are weighing up.\",\n  \"hook\": \"The opening line that stops the scroll.\",\n  \"structure\": [\"First beat.\", \"Second beat.\", \"Third beat.\"],\n  \"cta\": \"The single action, stated plainly.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        128
+      ],
+      "id": "21cdca43-8250-4b3e-ae5e-74ca8d78d641",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d37854b8-54c7-424c-9c9c-43c36222f498",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "46V7LwXV6PZ8B0Zy",
+  "tags": []
+}
