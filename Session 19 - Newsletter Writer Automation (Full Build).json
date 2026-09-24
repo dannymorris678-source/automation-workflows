@@ -1,0 +1,266 @@
+{
+  "name": "Session 19 - Newsletter Writer Automation (Full Build)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "287bfb92-c1e3-463a-a6a5-60663af9ab4e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "819a1098-f5ae-4290-b012-056545bc8c90",
+      "name": "Webhook",
+      "webhookId": "287bfb92-c1e3-463a-a6a5-60663af9ab4e"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-5\",\n  \"max_tokens\": 3000,\n  \"output_config\": {\n    \"format\": {\n      \"type\": \"json_schema\",\n      \"schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"angle\":         { \"type\": \"string\" },\n          \"target_reader\": { \"type\": \"string\" },\n          \"hook\":          { \"type\": \"string\" },\n          \"structure\":     { \"type\": \"array\", \"items\": { \"type\": \"string\" } },\n          \"cta\":           { \"type\": \"string\" }\n        },\n        \"required\": [\"angle\", \"target_reader\", \"hook\", \"structure\", \"cta\"],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"system\": \"You are an experienced creative strategist for The 600.\\n\\nThe 600 is a channel about expat life, living abroad, and building a free life on your own terms — the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content.\\n\\nThe audience is people who are seriously considering leaving their country, not people daydreaming about it. Many feel stuck — by tax, by cost of living, by a system they no longer want to be part of — and are weighing a real move. Many have families, which makes the decision heavier and the practical details matter more. What they want is honest information about what a move actually costs and what it actually involves, so they can decide for themselves.\\n\\nThe brief you produce sets the direction for a full week of output, all descending from the same idea: one long-form YouTube video, three short-form scripts for YouTube Shorts, Instagram and TikTok, seven Substack posts published one per day, and one newsletter. Everything must trace back to the single angle you decide on here.\\n\\nYour task: take the rough content idea and supporting notes provided by the user and turn them into a single clear brief for the week — one angle strong enough to carry a long-form video, three shorts, seven Substack posts and a newsletter.\\n\\nReturn the brief with these five sections, clearly labelled:\\n\\nAngle: the single specific take on the idea this week. One sentence.\\nTarget Reader: who this week's content is aimed at, and what they are weighing up.\\nHook: the opening line or question that makes them stop scrolling.\\nThree-Point Structure: the three beats the content moves through, in order.\\nCTA: the single action you want the audience to take this week, stated plainly in one line. Not platform-specific wording - each downstream format will phrase it in its own way. It must be a content action such as watch, read, subscribe, comment or share. Never offer consulting, one-to-one help or a personal reply.\",\n  \"messages\": [\n    { \"role\": \"user\", \"content\": \"El Salvador. Bukele reforms. Bitcoin legal tender, since walked back under IMF deal. Homicide rate collapsed from among the worst in the world. Mass incarceration under state of exception, tens of thousands held. New residency and investment routes being pushed at foreigners. Cost of living low. Infrastructure outside San Salvador is thin.\" },\n  { \"role\": \"assistant\", \"content\": \"Angle: El Salvador went from one of the most dangerous countries on earth to actively courting foreigners in under a decade, and the same policy that made it safe is the one people are least willing to talk about.\\n\\nTarget Reader: People who have seen El Salvador appear on every relocation list this year and are trying to work out whether the safety turnaround is real, whether it lasts, and what they would be accepting by moving there.\\n\\nHook: El Salvador had one of the highest murder rates on the planet. Today it is safer than most of its neighbours, and people are moving there on purpose. Nobody wants to talk about what it took.\\n\\nThree-Point Structure:\\n1. What actually changed on the ground - the homicide collapse, the state of exception, and the scale of the incarceration that came with it.\\n2. What is being offered to foreigners now - the residency and investment routes, the low cost of living, and where the Bitcoin story actually landed after the IMF deal.\\n3. What you would be signing up for - thin infrastructure outside San Salvador, a security model that depends on emergency powers staying in place, and the question of what happens if they do not.\\n\\nCTA: Watch the full breakdown before you take any El Salvador relocation list at face value.\" },\n { \"role\": \"user\", \"content\": \"={{ $json.body.idea }}\" }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3a9b404b-b731-4214-af45-a42b9ec758f3",
+      "name": "Claude",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "LanVhn5RmsfueLqS",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6a4b29f-ca6e-4469-b849-a5125872d164",
+              "name": "brief",
+              "value": "={{ JSON.parse($json.content.find(c => c.type === 'text').text) }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        0
+      ],
+      "id": "bcd94210-5154-47a0-921b-ae7c42d0c73b",
+      "name": "Brief Structure"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"model\": \"claude-sonnet-5\",\n  \"max_tokens\": 3000,\n  \"system\": \"Role: You are an expert newsletter writer for The 600.\\n\\nContext: The 600 is a YouTube channel and brand about expat life, living abroad, and building a free life on your own terms — the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The audience is people seriously considering leaving their country, many with families, weighing a real move. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content.\\n\\nTask: You will be given a brief with five fields: angle, target_reader, hook, structure, cta. Write a complete newsletter based on that brief. The angle, hook and structure are already decided and handed to you — your job is to write the newsletter that delivers them, not to invent a new direction. Use the target_reader to pitch it at the right person, and end on the cta. The newsletter is about the topic in the brief — a country, a policy, a move — not about the writer's personal life. Do not invent personal anecdotes.\\n\\nFormat: Return the newsletter in this shape:\\n- A short, punchy title — a hook in itself, not a description of the contents.\\n- A one-line subheading under the title that sharpens the angle.\\n- A cold open — drop straight into the subject with a strong first line. No greeting, no preamble.\\n- The body — deliver the three points from the brief's structure, in order, as short sections. Short paragraphs, one idea each.\\n- A single concrete takeaway the reader can act on this week.\\n- One line inviting the reader to reply.\\n- The call to action from the brief, phrased naturally as a line pointing to the video.\\n- A short, honest sign-off.\\n\\nRules:\\n- Short sentences. Short paragraphs. One idea per paragraph.\\n- Honest and plain. No hype, no filler, no motivational padding. If a line isn't earning its place, cut it.\\n- Deal in the real numbers and real trade-offs from the brief. Concrete over vague.\\n- Stick to the three points in the brief's structure. Do not wander off them.\\n- Write in a restrained, understated voice — dry honesty, not jokes. No manufactured humour or personality.\\n- Keep it between 600 and 800 words.\\n- Return only the newsletter itself. No preamble, no explanation, no notes.\\n- Plain text only. No markdown symbols (no #, no **). No em dashes.\",\n  \"messages\": [\n    { \"role\": \"user\", \"content\": \"Here is the brief. Write the newsletter from it.\\n\\n\" + JSON.stringify($json.brief) }\n  ]\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        352,
+        0
+      ],
+      "id": "bf4b7184-f368-4f0c-b1f6-72b99d236e87",
+      "name": "Newsletter Writer",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "LanVhn5RmsfueLqS",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3e1ed786-6eb3-8050-af9d-000bf70f50ee",
+          "mode": "list",
+          "cachedResultName": "The 600 Newsletter Drafts",
+          "cachedResultUrl": "https://app.notion.com/p/3e1ed7866eb380e4a002fcb3eb071a2c"
+        },
+        "title": "={{ $json.content.find(c => c.type === 'text').text.split('\\n')[0].replace('# ', '') }}",
+        "propertiesUi": {
+          "propertyValues": []
+        },
+        "blockUi": {
+          "blockValues": [
+            {
+              "richText": true,
+              "text": {
+                "text": [
+                  {
+                    "text": "={{ $json.content.find(c => c.type === 'text').text.slice(0, 2000) }}",
+                    "annotationUi": {}
+                  },
+                  {
+                    "text": "={{ $json.content.find(c => c.type === 'text').text.slice(2000, 4000) }}",
+                    "annotationUi": {}
+                  },
+                  {
+                    "text": "={{ $json.content.find(c => c.type === 'text').text.slice(4000, 6000) }}",
+                    "annotationUi": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        544,
+        0
+      ],
+      "id": "bccd239c-b968-4d83-b8f0-dd7b7629192c",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "bMR4USz2s5IiWv8Q",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id"
+            },
+            {
+              "name": "text",
+              "value": "=Draft ready in Notion: {{ $json.name }} {{ $json.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        720,
+        0
+      ],
+      "id": "d28f3f62-d406-4bea-b0fd-05b1e66a004b",
+      "name": "Telegram"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "main": [
+        [
+          {
+            "node": "Brief Structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Structure": {
+      "main": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Newsletter Writer": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "99b69d56-208c-43d3-b9a4-bae136da18a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "RdCfdKWtsPIi6Dcu",
+  "tags": []
+}
