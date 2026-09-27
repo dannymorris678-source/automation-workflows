@@ -1,0 +1,168 @@
+{
+  "name": "Session 20 - Internet Access",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-5",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        224,
+        176
+      ],
+      "id": "baea5165-c9fb-488e-916b-a61b214cd82f",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ajVLpfa2HCseElR2",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant. Answer clearly and briefly. Only use a tool when you need information you do not already have. ",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d29811e6-5c90-4532-b711-ea80160f9bb6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        48,
+        0
+      ],
+      "id": "82bcf723-09dd-436c-8fce-bb332cf9ea5a",
+      "name": "When chat message received",
+      "webhookId": "f291777e-d929-4a1a-a332-41292ee27ad2"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Gets today's exchange rate between two currencies, using European Central Bank rates. Needs the currency to convert from (base) and the currency to convert to (symbols), as three-letter codes such as EUR, GBP or USD. Use this only when the user asks about exchange rates or converting money",
+        "url": "https://api.frankfurter.dev/v1/latest",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.5,
+      "position": [
+        400,
+        256
+      ],
+      "id": "afad6aab-66cb-457b-a964-1f833cd89f0d",
+      "name": "Exchange Rates"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Gets the current weather for any location. Needs the latitude and longitude of the place, so work these out from the place name. Returns temperature in °C, a weather code and wind speed. Use this only when the user asks about the current weather somewhere.",
+        "url": "https://api.open-meteo.com/v1/forecast?current=temperature_2m,weather_code,wind_speed_10m&timezone=auto",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "=latitude",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"
+            },
+            {
+              "name": "longitude",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.5,
+      "position": [
+        528,
+        192
+      ],
+      "id": "2f7426d2-269c-4c99-ba31-fa3957144d0e",
+      "name": "Weather"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Exchange Rates": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weather": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b1f21ef9-1f71-4098-9051-718f51a51373",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "0PH5Bcckv9LOQunw",
+  "tags": []
+}
