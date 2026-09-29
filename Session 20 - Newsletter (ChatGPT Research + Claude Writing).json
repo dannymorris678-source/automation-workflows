@@ -214,13 +214,11 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.telegram.org/bot8851567709:AAGIMMLXfzG6sygOwcGfuX7qI-Z4HbB_a6g/sendMessage",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
             {
-              "name": "chat_id",
-              "value": "1417671961"
+              "name": "chat_id"
             },
             {
               "name": "text",
@@ -326,7 +324,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "0a3e0d4d-5635-4dd8-962e-f418ad0a08dc",
+  "versionId": "c4072479-7e6f-4d51-8d1d-318e4113bcd9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
