@@ -1,0 +1,364 @@
+{
+  "name": "Session 20 - Newsletter + ChatGPT Research Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "89c5236b-7be7-4162-ac73-998a9185a357",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "3145ff38-ba40-43a9-b5b0-84320d349a41",
+      "name": "Webhook",
+      "webhookId": "89c5236b-7be7-4162-ac73-998a9185a357"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.idea }}",
+        "options": {
+          "systemMessage": "Role: You are the lead researcher for The 600. Your job is to find accurate, current, well-sourced information on the topic you are given, so the strategist can build a brief from it.\n\nContext: The 600 is a channel about expat life, living abroad, and building a free life on your own terms: the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content. The audience is people seriously considering leaving their country, many with families, so practical detail matters most.\n\nTask: Take the topic in the user's message, search the web, and produce research notes the strategist can build a brief from. You are the researcher only. Do not decide an angle and do not write the brief.\n\nFormat: Clean, plain notes grouped by theme. Use whichever of these themes fit the topic: visas and residency routes (legal routes only), tax, cost of living, healthcare and schools, ways to earn an income or set up a business, and downsides and risks. Keep the notes under 800 words.\n\nRules:\n- Use real numbers wherever possible, and note the date each figure is from.\n- Use official sources (such as government websites) and reputable publications (such as established national newspapers and respected specialist outlets) as your main evidence.\n- Blogs and forums are useful for leads and real experience, but check any key fact from them against an official or reputable source. If you cannot confirm it, label it as unconfirmed.\n- Write the full source link in the notes next to each key fact, so it can be checked.\n- If sources disagree or something is unclear, say so plainly rather than picking one.\n- If you cannot find reliable information on a point, say so. Never guess or fill gaps.\n- You have a limited number of searches, so use them on the most important questions first.\n- Return only the research notes. No commentary about your searches, no preamble.\n- Plain text only. No markdown symbols and no em dashes."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        64,
+        0
+      ],
+      "id": "cb215ffa-be56-4f15-a2e7-2d8546eacfb0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-6-luna",
+          "mode": "list",
+          "cachedResultName": "gpt-6-luna"
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "high"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        208
+      ],
+      "id": "2abb5cc4-0507-4bd0-bcde-87faabf19ca0",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ECZLSaOj1Nog3gHY",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Rough idea: {{ $node[\"Webhook\"].json.body.idea }}\n\nResearch notes:\n{{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an experienced creative strategist for The 600.\n\nThe 600 is a channel about expat life, living abroad, and building a free life on your own terms — the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content.\n\nThe audience is people who are seriously considering leaving their country, not people daydreaming about it. Many feel stuck — by tax, by cost of living, by a system they no longer want to be part of — and are weighing a real move. Many have families, which makes the decision heavier and the practical details matter more. What they want is honest information about what a move actually costs and what it actually involves, so they can decide for themselves.\n\nThe brief you produce sets the direction for a full week of output, all descending from the same idea: one long-form YouTube video, three short-form scripts for YouTube Shorts, Instagram and TikTok, seven Substack posts published one per day, and one newsletter. Everything must trace back to the single angle you decide on here.\n\nYour task: take the rough content idea and supporting notes provided by the user and turn them into a single clear brief for the week — one angle strong enough to carry a long-form video, three shorts, seven Substack posts and a newsletter.\n\nReturn the brief with these five sections, clearly labelled:\n\nAngle: the single specific take on the idea this week. One sentence.\nTarget Reader: who this week's content is aimed at, and what they are weighing up.\nHook: the opening line or question that makes them stop scrolling.\nThree-Point Structure: the three beats the content moves through, in order.\nCTA: the single action you want the audience to take this week, stated plainly in one line. Not platform-specific wording - each downstream format will phrase it in its own way. It must be a content action such as watch, read, subscribe, comment or share. Never offer consulting, one-to-one help or a personal reply.\n\nExample input:\nEl Salvador. Bukele reforms. Bitcoin legal tender, since walked back under IMF deal. Homicide rate collapsed from among the worst in the world. Mass incarceration under state of exception, tens of thousands held. New residency and investment routes being pushed at foreigners. Cost of living low. Infrastructure outside San Salvador is thin.\n\nExample brief:\nAngle: El Salvador went from one of the most dangerous countries on earth to actively courting foreigners in under a decade, and the same policy that made it safe is the one people are least willing to talk about.\n\nTarget Reader: People who have seen El Salvador appear on every relocation list this year and are trying to work out whether the safety turnaround is real, whether it lasts, and what they would be accepting by moving there.\n\nHook: El Salvador had one of the highest murder rates on the planet. Today it is safer than most of its neighbours, and people are moving there on purpose. Nobody wants to talk about what it took.\n\nThree-Point Structure:\n1. What actually changed on the ground - the homicide collapse, the state of exception, and the scale of the incarceration that came with it.\n2. What is being offered to foreigners now - the residency and investment routes, the low cost of living, and where the Bitcoin story actually landed after the IMF deal.\n3. What you would be signing up for - thin infrastructure outside San Salvador, a security model that depends on emergency powers staying in place, and the question of what happens if they do not.\n\nCTA: Watch the full breakdown before you take any El Salvador relocation list at face value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        432,
+        0
+      ],
+      "id": "dacb9f80-bf7d-444c-8962-a68d1e6f8002",
+      "name": "Brief Writer"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-6-sol",
+          "mode": "list",
+          "cachedResultName": "gpt-6-sol"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        208
+      ],
+      "id": "e5972f31-9095-4770-ba9b-fb15a91fe877",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ECZLSaOj1Nog3gHY",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"angle\": \"One sentence naming this week's specific take.\",\n  \"target_reader\": \"Who this is aimed at and what they are weighing up.\",\n  \"hook\": \"The opening line that stops the scroll.\",\n  \"structure\": [\"First beat.\", \"Second beat.\", \"Third beat.\"],\n  \"cta\": \"The single action, stated plainly.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        208
+      ],
+      "id": "ed81d42b-8f6d-4784-a51f-4b056701cab2",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the brief. Write the newsletter from it.\n\n{{ JSON.stringify($json.output) }}",
+        "options": {
+          "systemMessage": "Role: You are an expert newsletter writer for The 600.\n\nContext: The 600 is a YouTube channel and brand about expat life, living abroad, and building a free life on your own terms — the real costs and the real options. The angle is freedom and optionality: lower taxes, freer countries, more control over how you live. The audience is people seriously considering leaving their country, many with families, weighing a real move. The tone is honest, not hyped. It deals in real numbers and real trade-offs, not aspirational content.\n\nTask: You will be given a brief with five fields: angle, target_reader, hook, structure, cta. Write a complete newsletter based on that brief. The angle, hook and structure are already decided and handed to you — your job is to write the newsletter that delivers them, not to invent a new direction. Use the target_reader to pitch it at the right person, and end on the cta. The newsletter is about the topic in the brief — a country, a policy, a move — not about the writer's personal life. Do not invent personal anecdotes.\n\nFormat: Return the newsletter in this shape:\n- A short, punchy title — a hook in itself, not a description of the contents.\n- A one-line subheading under the title that sharpens the angle.\n- A cold open — drop straight into the subject with a strong first line. No greeting, no preamble.\n- The body — deliver the three points from the brief's structure, in order, as short sections. Short paragraphs, one idea each.\n- A single concrete takeaway the reader can act on this week.\n- One line inviting the reader to reply.\n- The call to action from the brief, phrased naturally as a line pointing to the video.\n- A short, honest sign-off.\n\nRules:\n- Short sentences. Short paragraphs. One idea per paragraph.\n- Honest and plain. No hype, no filler, no motivational padding. If a line isn't earning its place, cut it.\n- Deal in the real numbers and real trade-offs from the brief. Concrete over vague.\n- Stick to the three points in the brief's structure. Do not wander off them.\n- Write in a restrained, understated voice — dry honesty, not jokes. No manufactured humour or personality.\n- Keep it between 600 and 800 words.\n- Return only the newsletter itself. No preamble, no explanation, no notes.\n- Plain text only. No markdown symbols (no #, no **). No em dashes."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "d898b550-51d0-4403-ab4f-b1446134722e",
+      "name": "Newsletter Writer"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-6-sol",
+          "mode": "list",
+          "cachedResultName": "gpt-6-sol"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        208
+      ],
+      "id": "2ae499a7-6a2f-4e8b-ae6e-607af6fc9cb8",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "ECZLSaOj1Nog3gHY",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3e1ed786-6eb3-8050-af9d-000bf70f50ee",
+          "mode": "list",
+          "cachedResultName": "The 600 Newsletter Drafts",
+          "cachedResultUrl": "https://app.notion.com/p/3e1ed7866eb380e4a002fcb3eb071a2c"
+        },
+        "title": "={{ $json.output.split('\\n')[0].replace('# ', '') }}",
+        "propertiesUi": {
+          "propertyValues": []
+        },
+        "blockUi": {
+          "blockValues": [
+            {
+              "richText": true,
+              "text": {
+                "text": [
+                  {
+                    "text": "={{ $json.output.slice(0, 2000) }}",
+                    "annotationUi": {}
+                  },
+                  {
+                    "text": "={{ $json.output.slice(2000, 4000) }}",
+                    "annotationUi": {}
+                  },
+                  {
+                    "text": "={{ $json.output.slice(4000, 6000) }}",
+                    "annotationUi": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "758e0401-df55-48e4-ba42-291dbeb22ed0",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "bMR4USz2s5IiWv8Q",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id"
+            },
+            {
+              "name": "text",
+              "value": "=Draft ready in Notion: {{ $json.name }} {{ $json.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "f874eb45-2c3b-48f8-8ae9-14efb9410117",
+      "name": "Telegram"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Brief Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Brief Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Brief Writer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Writer": {
+      "main": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Newsletter Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Newsletter Writer": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8679b283-7f59-483c-9933-74caeea27fbf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acd103ad4c9d8bb8d29a1dbe09d5eeb0622f730c253f13e8920d5fdc0564f142"
+  },
+  "nodeGroups": [],
+  "id": "RSYnCBhFnBnt3t3o",
+  "tags": []
+}
